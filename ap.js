@@ -27,17 +27,15 @@ function cargarNombres() {
             ul.append(li);
             $('.referencia').click(function(){
                 let texto ="";
-                let texto1 = "";
                 for(i=0;i<servicios.length;i++){
                     let deuda=servicios[i]["deuda"];
                     let tipo_servicio=servicios[i]["servicio"];
                     texto+="Deuda: "+deuda+"\n"+"Servicio: "+tipo_servicio+"\n";
-                    texto1 += cargarInfo(tipo_servicio);
+                    cargarInfo(tipo_servicio);
                     /*let info=cargarInfoServicio(tipo_servicio);
                     texto+="\n"+info;*/ 
                 }
                 alert(texto);
-                alert(texto1);
 
             });
 
@@ -65,22 +63,13 @@ function cargarInfo( tipo_servicio) {
 
             $(data).find('servicio').each(function() {
                 tipo = $(this).attr("tipo");
-                console.log(tipo);
                 if (tipo == tipo_servicio){
                     var nombre = $(this).find('nombre').text();
                     var direccion = $(this).find('direccion').text();
                     var telefono = $(this).find('telefono').text();
-                    var texto = nombre + "  "+direccion + "  "+ telefono;
+                    var texto = nombre + "\n"+direccion + "\n"+ telefono;
+                    alert(texto);
                     return texto;
-                    let li = $('<li></li>');
-                    let a = $('<a></a>');
-                    a.attr('class', 'ritmos-latinos')
-                    a.click({ritmo: titulo}, filtrar);
-
-                    a.append(titulo)
-                    li.append(a);
-                    li.append(cantidad);
-                    ul.append(li);
                 }
                 
 
