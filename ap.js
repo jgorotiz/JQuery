@@ -1,88 +1,52 @@
-var http_request = false;
 
-function makeRequest(url) {
-    http_request = false;
+function cargarNombres() {
 
-    if (window.XMLHttpRequest) { // Mozilla, Safari,...
-        http_request = new XMLHttpRequest();
-        if (http_request.overrideMimeType) {
-            http_request.overrideMimeType('text/plain');
-            // Ver nota sobre esta linea al final
-        }
-    } else if (window.ActiveXObject) { // IE
-        try {
-            http_request = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e) {
-            try {
-                http_request = new ActiveXObject("Microsoft.XMLHTTP");
-            } catch (e) {}
-        }
-    }
+    /*carga de artistas desde cantantes.json*/
 
-    if (!http_request) {
-        alert('Falla :( No es posible crear una instancia XMLHTTP');
-        return false;
-    }
-    http_request.onreadystatechange = alertContents;
-    http_request.open('GET', url, true);
-    http_request.send(null);
+    $.getJSON("gastos_personales.json", function(data) {
+        $.each(data, function(key, val) {
+            var nombre = val["nombre"]
+            var ul = $('<ul></ul>')
+            ul.attr('class', 'lista-nombres');
+            $('#lista').append(ul);
+            let li = $('<li></li>');
+            let a = $('<a></a>');
+            a.attr('href', '#')
+            a.attr("class","referencia")
+            /*a.click({ritmo: titulo}, filtrar);*/
+             var servicios= val["servicios"];
+            var deudatotal=0;
+            for(i=0;i<servicios.length;i++){
+                    let deuda=servicios[i]["deuda"];
+                    deudatotal+=parseFloat(deuda);
+                }
+             nombre+=": ";
+            nombre+= deudatotal;
+            a.append(nombre)
+            li.append(a);
+            ul.append(li);
+            $('.referencia').click(function(){
+                alert("entroo")
+                let texto ="";
+                for(i=0;i<servicios.length;i++){
+                    let deuda=servicios[i]["deuda"];
+                    let tipo_servicio=servicios[i]["servicio"];
+                     texto+="Deuda: "+deuda+"\n"+"Servicio: "+tipo_servicio+"\n";
+                    /*let info=cargarInfoServicio(tipo_servicio);
+                    texto+="\n"+info;*/ 
+                }
+                alert(texto);
 
+            });
+
+           
+
+        });
+        
+    });
 }
 
-function makeRequest1(url) {
-    http_request = false;
-
-    if (window.XMLHttpRequest) { // Mozilla, Safari,...
-        http_request = new XMLHttpRequest();
-        if (http_request.overrideMimeType) {
-            http_request.overrideMimeType('text/XML');
-            // Ver nota sobre esta linea al final
-        }
-    } else if (window.ActiveXObject) { // IE
-        try {
-            http_request = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e) {
-            try {
-                http_request = new ActiveXObject("Microsoft.XMLHTTP");
-            } catch (e) {}
-        }
-    }
-
-    if (!http_request) {
-        alert('Falla :( No es posible crear una instancia XMLHTTP');
-        return false;
-    }
-    http_request.onreadystatechange = alertContents;
-    http_request.open('GET', url, true);
-    http_request.send(null);
-
-}
-
-function alertContents() {
-    if (http_request.readyState == 4) {
-        if (http_request.status == 200) {
-            /*Aquí deben procesar el JSON y mostrar la respuesta en el HTML*/
-            let lista = document.getElementById("lista")
-            var documento = http_request.response;
-            var docJson=JSON.parse(documento);
-            for(i=0;i<docJson.length;i++){
-                let nombre=docJson[i].nombre;
-                let elemento = document.createElement("li")
-                let link = document.createElement("a")
-                link.setAttribute("href","#")
-                let texto = document.createTextNode(nombre)
-                link.appendChild(texto)
-                elemento.appendChild(link)
-                lista.appendChild(elemento)
-            }
-            
-        } else {
-            alert('Hubo problemas con la petición.');
-        }
-    }
-}
 
 window.onload = function() {
-        makeRequest('gastos_personales.json');
-    
+    cargarNombres() ;
 }
